@@ -50,6 +50,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - WORDPRESS_CONFIG_EXTRA=define('WP_REDIS_HOST', 'redis'); define('WP_REDIS_PORT', 6379); define('WP_REDIS_PASSWORD', '${REDIS_PASSWORD}');
     volumes:
       - wordpress:/var/www/html
     networks:

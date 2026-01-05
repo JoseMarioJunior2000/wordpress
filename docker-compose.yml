@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  db:
+  wordpress-db:
     image: mysql:8.0
     container_name: wordpress-db
     restart: unless-stopped
@@ -12,7 +12,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - dbdata:/var/lib/mysql
-    command: '--default-authentication-plugin=mysql_native_password'
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -38,7 +37,7 @@ services:
     build: .
     container_name: wordpress
     depends_on:
-      db:
+      wordpress-db:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -48,6 +47,9 @@ services:
       - WORDPRESS_DB_USER=${MYSQL_USER}
       - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
       - wordpress:/var/www/html
     networks:
@@ -60,26 +62,14 @@ services:
     container_name: webserver
     restart: unless-stopped
     ports:
-      - "127.0.0.1:80:80"
+      - "8080:80"
     volumes:
       - wordpress:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
     networks:
       - custom_bridge
 
-  certbot:
-    depends_on:
-      - webserver
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - wordpress:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email sammy@your_domain --agree-tos --no-eff-email --staging -d your_domain -d www.your_domain
-
 volumes:
-  certbot-etc:
   wordpress:
   dbdata:
 

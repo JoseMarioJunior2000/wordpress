@@ -56,16 +56,15 @@ services:
       - custom_bridge
 
   webserver:
-    depends_on:
-      - wordpress
-    image: nginx:1.15.12-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx # Usa a receita específica do Nginx
     container_name: webserver
     restart: unless-stopped
     ports:
       - "8080:80"
     volumes:
       - wordpress:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
     networks:
       - custom_bridge
 

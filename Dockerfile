@@ -1,4 +1,4 @@
-FROM wordpress:5.1.1-fpm-alpine
+FROM wordpress:php8.1-fpm-alpine
 
 RUN apk add --no-cache $PHPIZE_DEPS \
     && pecl install redis \

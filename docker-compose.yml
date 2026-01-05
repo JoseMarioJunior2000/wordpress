@@ -45,7 +45,7 @@ services:
     environment:
       - WORDPRESS_DB_HOST=wordpress-db
       - WORDPRESS_DB_USER=${MYSQL_USER}
-      - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
       - REDIS_HOST=redis
       - REDIS_PORT=6379

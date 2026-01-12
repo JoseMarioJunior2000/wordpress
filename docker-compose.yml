@@ -34,8 +34,13 @@ services:
       - custom_bridge
 
   wordpress:
-    build: .
+    pull_policy: never
+    image: wordpresscustom
     container_name: wordpress
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
     depends_on:
       wordpress-db:
         condition: service_healthy
@@ -57,9 +62,12 @@ services:
       - custom_bridge
 
   webserver:
+    pull_policy: never
+    image: wordpresnginx
     build:
       context: .
       dockerfile: Dockerfile.nginx # Usa a receita específica do Nginx
+      target: development
     container_name: webserver
     restart: unless-stopped
     ports:

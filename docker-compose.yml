@@ -40,7 +40,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
     depends_on:
       wordpress-db:
         condition: service_healthy
@@ -67,7 +66,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nginx # Usa a receita específica do Nginx
-      target: development
     container_name: webserver
     restart: unless-stopped
     ports:
